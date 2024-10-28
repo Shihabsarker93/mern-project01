@@ -11,6 +11,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 
@@ -19,11 +22,12 @@ export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
-  const [fileUploadError, setFileUploadError] = useState('');
+  const [fileUploadError, setFileUploadError] = useState(false); // Store error state
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
 
+  // Effect to handle file upload when a file is selected
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -44,43 +48,60 @@ export default function Profile() {
         setFilePerc(Math.round(progress));
       },
       (error) => {
-        setFileUploadError('Error uploading image');
+        // Set error message on file upload failure
+        setFileUploadError(true); // Consider using a string message for clarity
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData((prevData) => ({ ...prevData, avatar: downloadURL }))
+          setFormData({ ...formData, avatar: downloadURL }) // Update formData with the new avatar URL
         );
       }
     );
   };
 
   const handleChange = (e) => {
-    setFormData((prevData) => ({ ...prevData, [e.target.id]: e.target.value }));
+    // Update formData with the input field changes
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!currentUser) {
-      return; // Ensure currentUser is defined
-    }
     try {
       dispatch(updateUserStart());
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: 'PUT', // Change this to 'PUT' or 'PATCH'
+        method: 'PUT', // Changed to PUT for updating user information
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (!res.ok) {
-        dispatch(updateUserFailure(data.message || 'Update failed'));
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
         return;
       }
+
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -97,13 +118,15 @@ export default function Profile() {
         />
         <img
           onClick={() => fileRef.current.click()}
-          src={formData.avatar || currentUser?.avatar || ''}
+          src={formData.avatar || currentUser?.avatar} // Optional chaining for safety
           alt='profile'
           className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'
         />
         <p className='text-sm self-center'>
           {fileUploadError ? (
-            <span className='text-red-700'>{fileUploadError}</span>
+            <span className='text-red-700'>
+              Error Image upload (image must be less than 2 mb)
+            </span>
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className='text-slate-700'>{`Uploading ${filePerc}%`}</span>
           ) : filePerc === 100 ? (
@@ -115,7 +138,7 @@ export default function Profile() {
         <input
           type='text'
           placeholder='username'
-          defaultValue={currentUser?.username || ''}
+          defaultValue={currentUser?.username} // Optional chaining for safety
           id='username'
           className='border p-3 rounded-lg'
           onChange={handleChange}
@@ -124,7 +147,7 @@ export default function Profile() {
           type='email'
           placeholder='email'
           id='email'
-          defaultValue={currentUser?.email || ''}
+          defaultValue={currentUser?.email} // Optional chaining for safety
           className='border p-3 rounded-lg'
           onChange={handleChange}
         />
@@ -143,10 +166,16 @@ export default function Profile() {
         </button>
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-red-700 cursor-pointer'>Delete account</span>
+        <span
+          onClick={handleDeleteUser}
+          className='text-red-700 cursor-pointer'
+        >
+          Delete account
+        </span>
         <span className='text-red-700 cursor-pointer'>Sign out</span>
       </div>
-      <p className='text-red-700 mt-5'>{error || ''}</p>
+
+      <p className='text-red-700 mt-5'>{error ? error : ''}</p>
       <p className='text-green-700 mt-5'>
         {updateSuccess ? 'User is updated successfully!' : ''}
       </p>
