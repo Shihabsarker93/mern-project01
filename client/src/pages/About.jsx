@@ -1,5 +1,5 @@
 import React from 'react'
-
+//shihab 
 export default function About() {
   return (
     <div className='bg-gradient-to-r from-slate-800 to-slate-900 min-h-screen py-16'>
@@ -19,7 +19,7 @@ export default function About() {
             Our mission is to help our clients achieve their real estate goals by providing expert advice, personalized service, and a deep understanding of the local market. Whether you are looking to buy, sell, or rent a property, we are here to help you every step of the way.
           </p>
           <p>
-            Our team of agents has a wealth of experience and knowledge in the real estate industry, and we are committed to providing the highest level of service to our clients. We believe that buying or selling a property should be an exciting and rewarding experience, and we are dedicated to making that a reality for each and every one of our clients.
+            Our team of  agents has a wealth of experience and knowledge in the real estate industry, and we are committed to providing the highest level of service to our clients. We believe that buying or selling a property should be an exciting and rewarding experience, and we are dedicated to making that a reality for each and every one of our clients.
           </p>
         </div>
       </div>
