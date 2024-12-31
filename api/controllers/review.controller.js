@@ -70,3 +70,40 @@ export const createReview = async (req, res, next) => {
 //     next(error);
 //   }
 // };
+
+export const getListingReviews = async (req, res, next) => {
+  try {
+    const reviews = await Review.find({ listingRef: req.params.listingId })
+      .populate('userRef', 'username')
+      .sort({ createdAt: -1 }); // Sort reviews by most recent
+    
+    res.status(200).json(reviews);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const deleteReview = async (req, res, next) => {
+  try {
+    // Find the existing review
+    const review = await Review.findById(req.params.reviewId);
+    
+    // Check if review exists
+    if (!review) {
+      return next(errorHandler(404, 'Review not found'));
+    }
+    
+    // Check if user is the review owner
+    if (review.userRef.toString() !== req.user.id) {
+      return next(errorHandler(401, 'You can only delete your own reviews'));
+    }
+    
+    // Delete the review
+    await Review.findByIdAndDelete(req.params.reviewId);
+    
+    res.status(200).json({ message: 'Review deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
