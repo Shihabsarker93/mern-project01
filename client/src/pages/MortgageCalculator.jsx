@@ -1,4 +1,39 @@
-//all the variables
+import React, { useState } from 'react';
+
+const MortgageCalculator = () => {
+  const [loanAmount, setLoanAmount] = useState('');
+  const [interestRate, setInterestRate] = useState('');
+  const [loanTerm, setLoanTerm] = useState('');
+  const [downPayment, setDownPayment] = useState('');
+  const [monthlyPayment, setMonthlyPayment] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const calculateMortgage = () => {
+    setError('');
+    setLoading(true);
+
+    if (!loanAmount || !interestRate || !loanTerm || !downPayment) {
+      setError('Please fill out all fields.');
+      setLoading(false);
+      return;
+    }
+
+    const principal = loanAmount - downPayment;
+    const monthlyInterest = interestRate / 100 / 12;
+    const totalPayments = loanTerm * 12;
+    const payment = (principal * monthlyInterest) / (1 - Math.pow(1 + monthlyInterest, -totalPayments));
+
+    if (isFinite(payment)) {
+      setMonthlyPayment(payment.toFixed(2));
+    } else {
+      setError('An error occurred during calculation. Please check your inputs.');
+    }
+
+    setLoading(false);
+  };
+
+  return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-slate-800 to-slate-900 py-16">
       <div className="max-w-lg w-full mx-auto p-6 rounded-xl shadow-xl bg-slate-800 text-white">
         <h2 className="text-3xl font-semibold mb-6 text-center text-amber-400">Mortgage Calculator</h2>
