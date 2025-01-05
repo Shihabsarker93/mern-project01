@@ -28,8 +28,9 @@ export default function CreateListing() {
     e.preventDefault();
     try {
       // Validation checks
+      
       if (formData.imageUrls.length < 1) {
-        return setError('You must upload at least one image');
+        return setError('You must upload at least one image'); 
       }
       if (+formData.regularPrice < +formData.discountPrice) {
         return setError('Discount price must be lower than regular price');
