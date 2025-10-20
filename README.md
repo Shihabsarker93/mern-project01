@@ -10,12 +10,18 @@
 
 ---
 
+## Notes
+
 ## Preview
-![KeyNest Homepage](./docs/1.png)
-![Create listing](./docs/2.png)
-![Profile Dashboard](./docs/3.png)
-![Mortgage Calculator](./docs/4.png)
-![About keynest](./docs/5.png)
+
+<div align="center">
+  <img src="./docs/1.png" alt="KeyNest Homepage" width="45%">
+  <img src="./docs/2.png" alt="Create Listing" width="45%">
+  <img src="./docs/3.png" alt="Profile Dashboard" width="45%">
+  <img src="./docs/4.png" alt="Mortgage Calculator" width="45%">
+  <img src="./docs/5.png" alt="About KeyNest" width="45%">
+</div>
+
 *Browse properties with our intuitive search and filter interface*
 
 ---
@@ -150,7 +156,7 @@ npm run dev
 
 ---
 
-## Getting Started (Mac Users) -----------------------for me ----------
+## Getting Started (Mac Users - Personal Setup)
 
 ### 1️⃣ Open Terminal
 
@@ -204,12 +210,10 @@ npm run dev
 VITE v5.0.0 ready in 400ms
 Local: http://localhost:5173/
 ```
---------------------------- for me end -----------------------
+
 Open the `Local` URL in your browser to view the React app.
 
 ---
-
-### 4️⃣ Notes
 
 * **Stop servers:** press `Ctrl + C` in each terminal.
 * **Normal run:** just `npm run dev` in backend and frontend terminals.
@@ -219,7 +223,7 @@ Open the `Local` URL in your browser to view the React app.
 
 ---
 
-### 5️⃣ Optional: Run Both Servers Together
+## Optional: Run Both Servers Together
 
 1. Install `concurrently` globally (once):
 ```bash
@@ -414,6 +418,6 @@ This project is licensed under the ISC License.
 
 For questions or issues, please open an issue on GitHub or contact the development team.
 
-**Project Maintainer:** [Md Shihab Sarker]  
-**Email:** [md.shihab.sarker@g.bracu.ac.bd]  
-**GitHub:** [https://github.com/yourusername](https://github.com/Shihabsarker93)
+**Project Maintainer:** Md Shihab Sarker  
+**Email:** md.shihab.sarker@g.bracu.ac.bd  
+**GitHub:** [https://github.com/Shihabsarker93](https://github.com/Shihabsarker93)
